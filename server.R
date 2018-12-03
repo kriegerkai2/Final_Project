@@ -10,7 +10,8 @@ shinyServer(function(input,output){
 
    
 #Plot the data
-
+  
+  
      output$futureplot <- renderPlot({plotdata <- subset(merged,site_no==input$site &
                                                             Date >= input$futuredates[1] &
                                                             Date <= input$futuredates[2])
@@ -18,16 +19,29 @@ shinyServer(function(input,output){
      if (input$checkbox==TRUE){
        
        ggplot()+
-         geom_line(data=merged, aes(x=merged$Date, y=merged$Discharge), color='blue') +
-         geom_line(data=merged,aes(x=merged$Date, y=merged$SWE), color='red')
-       
+         geom_line(data=merged, aes(x=merged$Date, y=merged$Discharge), color='red') +
+         geom_line(data=merged,aes(x=merged$Date, y=merged$SWE), color='blue') +
+         xlab("Year")+ylab("SWE (inches) and Discharge (cfs)")
      }else{
        
        ggplot()+
-         geom_line(data=merged,aes(x=merged$Date, y=merged$Discharge), color='blue') 
+         geom_line(data=merged,aes(x=merged$Date, y=merged$Discharge), color='red') +
+         xlab("Year")+ylab("SWE (inches) and Discharge (cfs)")
      }
    })
 
+     
+     output$Futureplot <- renderPlot({
+       plotdata <- subset(merged,
+                          Date >= input$futuredates[1] &
+                            Date <= input$futuredates[2])
+       
+       ggplot(data=plotdata, aes(x=plotdata$Date, y=plotdata$Discharge))+
+         geom_line(stat="identity", colour = 'red')+
+         geom_line(aes(x=plotdata$Date, y=plotdata$SWE), stat="identity", colour = 'blue')+
+         xlab("Year")+ylab("SWE (inches) and Discharge (cfs)")
+       
+     })
      
 #box plots
     #box plot1 and box plot2
